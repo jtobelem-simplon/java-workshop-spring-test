@@ -87,14 +87,14 @@ public class CityControllerTests {
 	public void getCityMonumentByName2() throws Exception {
 		
 		when(this.monumentService
-				.getMonumentByCityAndName("Paris", "Louvre"))
+				.getMonumentByCityAndName(any(), any()))
 		.thenReturn(new Monument("Louvre", new City("Paris", 75)));
 		
 		this.mockMvc.perform(get("/api/city/paris/monument/louvre"))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("name").value("Louvre"))
 		.andExpect(jsonPath("city.name").value("Paris"))
-		.andExpect(jsonPath("city.city_idx").value(75));
+		.andExpect(jsonPath("city.dptCode").value(75));
 
 		
 	}
