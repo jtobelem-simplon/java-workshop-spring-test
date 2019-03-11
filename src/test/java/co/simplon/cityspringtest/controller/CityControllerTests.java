@@ -61,21 +61,54 @@ public class CityControllerTests {
 
 	@Test
 	public void getCityMonuments() throws Exception {
-		fail();
-		// TODO
+		when(this.monumentService.getAllCityMonuments(any()))
+		.thenReturn(new ArrayList<>());
+		
+		this.mockMvc.perform(get("/api/city/Toto/monument"))
+		.andExpect(status().isOk());
+
+		
 	}
 
 	@Test
 	public void getCityMonumentByName() throws Exception {
-		fail();
-		// TODO
+		
+		when(this.monumentService
+				.getMonumentByCityAndName("Paris", "Tour Eiffel"))
+		.thenReturn(new Monument("Tour Eiffel", new City("Paris", 75)));
+		
+		this.mockMvc.perform(get("/api/city/Paris/monument/Tour Eiffel"))
+		.andExpect(status().isOk());
+
+		
+	}
+	
+	@Test
+	public void getCityMonumentByName2() throws Exception {
+		
+		when(this.monumentService
+				.getMonumentByCityAndName("Paris", "Louvre"))
+		.thenReturn(new Monument("Louvre", new City("Paris", 75)));
+		
+		this.mockMvc.perform(get("/api/city/paris/monument/louvre"))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("name").value("Louvre"))
+		.andExpect(jsonPath("city.name").value("Paris"))
+		.andExpect(jsonPath("city.city_idx").value(75));
+
+		
 	}
 
 	@Test
 	public void getCityMonumentByNameNotFound() throws Exception {
-		when(this.monumentService.getMonumentByCityAndName(any(), any())).thenReturn(null);
+		//fail();
+		// TODO
+		when(this.monumentService.getMonumentByCityAndName("city", "truc"))
+		.thenReturn(null);
 
-		this.mockMvc.perform(get("/api/city/paris/monument/tour-de-babel")).andExpect(status().isNotFound());
+		this.mockMvc.perform(get("/api/city/city/monument/truc"))
+		.andExpect(status().isNotFound());
+
 	}
 
 	@Test
