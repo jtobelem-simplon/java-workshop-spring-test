@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import co.simplon.cityspringtest.exception.MonumentNameNotFoundException;
 import co.simplon.cityspringtest.model.City;
 import co.simplon.cityspringtest.model.Monument;
 import co.simplon.cityspringtest.repository.CityRepository;
@@ -26,19 +27,26 @@ public class MonumentServiceImpl implements MonumentService {
 	}
 
 	@Override
-	public Monument getMonumentByCityAndName(String cityName, String name) {
-		return monumentRepository.findByCityNameAndName(NameResourceHelper.urlToName(cityName),
-				NameResourceHelper.urlToName(name));
+	public Monument getMonumentByCityAndName(String cityName, String name) 
+			throws MonumentNameNotFoundException {
+		Monument monument = monumentRepository.findByCityNameAndName(cityName,name);
+		
+		if (monument != null) {
+			return monument;
+		}
+		else {
+			throw new MonumentNameNotFoundException(cityName, name);
+		}
 	}
 
 	@Override
 	public Monument saveMonumentToCity(String cityName, Monument monument) {
 		Monument newSavedMonument = null;
-		City city = cityRepository.findByName(NameResourceHelper.urlToName(cityName));
+		City city = cityRepository.findByName(cityName);
 
 		if (city != null) {
-			monument.setCity(city);
 			newSavedMonument = monumentRepository.save(monument);
+			monument.setCity(city);
 		}
 
 		return newSavedMonument;

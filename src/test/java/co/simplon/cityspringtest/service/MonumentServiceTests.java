@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import co.simplon.cityspringtest.exception.MonumentNameNotFoundException;
 import co.simplon.cityspringtest.model.City;
 import co.simplon.cityspringtest.model.Monument;
 import co.simplon.cityspringtest.repository.CityRepository;
@@ -43,7 +44,7 @@ public class MonumentServiceTests {
 	}
 
 	@Test
-	public void getMonumentByCityAndName() {
+	public void getMonumentByCityAndName() throws MonumentNameNotFoundException {
 		given(monumentRepo.findByCityNameAndName("Paris", "Tour Eiffel"))
 				.willReturn(new Monument("Louvre", new City("Paris", 75)));
 
@@ -53,13 +54,10 @@ public class MonumentServiceTests {
 		assertThat(louvre.getCity().getDptCode()).isEqualTo(75);
 	}
 
-	@Test
-	public void getMonumentByCityAndNameNotFound() {
+	@Test(expected = MonumentNameNotFoundException.class)
+	public void getMonumentByCityAndNameNotFound() throws MonumentNameNotFoundException {
 		given(monumentRepo.findByCityNameAndName("Paris", "Tour de Pise")).willReturn(null);
-
-		Monument notFoundMonument = monumentService.getMonumentByCityAndName("Paris", "Tour de Pise");
-
-		assertThat(notFoundMonument).isNull();
+		monumentService.getMonumentByCityAndName("Paris", "Tour de Pise");
 	}
 
 	@Test
