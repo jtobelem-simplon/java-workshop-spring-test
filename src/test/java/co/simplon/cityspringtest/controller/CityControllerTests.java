@@ -138,7 +138,7 @@ public class CityControllerTests {
 		String jsonContent = "{\"name\": \"Toulouse\", \"dptCode\": \"31\"}";
 
 		this.mockMvc.perform(post("/api/city").contentType(MediaType.APPLICATION_JSON_UTF8).content(jsonContent))
-				.andExpect(status().isCreated()).andExpect(jsonPath("name").value("Toulouse"))
+				.andExpect(status().isOk()).andExpect(jsonPath("name").value("Toulouse"))
 				.andExpect(jsonPath("dptCode").value(31));
 	}
 
@@ -154,7 +154,7 @@ public class CityControllerTests {
 		String jsonContent = cityJacksonTester.write(city).getJson();
 
 		this.mockMvc.perform(post("/api/city").contentType(MediaType.APPLICATION_JSON_UTF8).content(jsonContent))
-				.andExpect(status().isCreated()).andExpect(jsonPath("name").value(city.getName()))
+				.andExpect(status().isOk()).andExpect(jsonPath("name").value(city.getName()))
 				.andExpect(jsonPath("dptCode").value(city.getDptCode()));
 	}
 
