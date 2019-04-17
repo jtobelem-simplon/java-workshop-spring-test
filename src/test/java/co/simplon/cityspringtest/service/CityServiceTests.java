@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import co.simplon.cityspringtest.exception.CityNameNotFoundException;
 import co.simplon.cityspringtest.model.City;
 import co.simplon.cityspringtest.repository.CityRepository;
 
@@ -38,7 +39,7 @@ public class CityServiceTests {
 	}
 
 	@Test
-	public void getCityByName() {
+	public void getCityByName() throws CityNameNotFoundException {
 		given(cityRepo.findByName("Paris")).willReturn(new City("Paris", 75));
 
 		City paris = cityService.getCityByName("Paris");
@@ -47,8 +48,8 @@ public class CityServiceTests {
 		assertThat(paris.getDptCode()).isEqualTo(75);
 	}
 
-	@Test
-	public void getCityByNameNotFound() {
+	@Test(expected = CityNameNotFoundException.class)
+	public void getCityByNameNotFound() throws CityNameNotFoundException {
 		given(cityRepo.findByName("Minas Tirith")).willReturn(null);
 
 		City notFoundCity = cityService.getCityByName("Minas Tirith");
