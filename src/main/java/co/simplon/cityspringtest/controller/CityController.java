@@ -41,11 +41,11 @@ public class CityController {
 	public ResponseEntity<City> getCityByName(@PathVariable String cityName) {
 		
 		try {
-			return new ResponseEntity<City>(cityService.getCityByName(cityName), HttpStatus.OK);
+			return ResponseEntity.ok(cityService.getCityByName(cityName));
 		} 
 		
 		catch (CityNameNotFoundException e) {
-			return new ResponseEntity<City>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 		
 	}
@@ -61,18 +61,18 @@ public class CityController {
 		
 		try {
 			Monument monument = monumentService.getMonumentByCityAndName(cityName, monumentName);
-			return new ResponseEntity<Monument>(monument, HttpStatus.OK);
+			return ResponseEntity.ok(monument);
 		} 
 		
 		catch (MonumentNameNotFoundException e) {
-			return new ResponseEntity<Monument>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@PostMapping
 	public ResponseEntity<City> createCity(@RequestBody City newCity) {
 		City newSavedCity = cityService.saveCity(newCity);
-		return new ResponseEntity<City>(newSavedCity, HttpStatus.CREATED);
+		return ResponseEntity.ok(newSavedCity);
 
 	}
 
@@ -84,25 +84,24 @@ public class CityController {
 		if (newSavedMonument != null) {
 			return ResponseEntity.ok(newSavedMonument);
 		} else {
-			return new ResponseEntity<Monument>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 	}
 	
 	@PutMapping()
 	public ResponseEntity<City> updateCity(@RequestBody City city) {
 		City updated = cityService.updateCity(city);
-		ResponseEntity<City> rep = ResponseEntity.ok(updated);
-		return rep;
+		return ResponseEntity.ok(updated);
 	}
 	
 	@DeleteMapping("/{cityName}")
 	public ResponseEntity<City> deleteCity(@PathVariable String cityName) {
 		try {
 			cityService.deleteCity(cityName);
-			return new ResponseEntity<City>(HttpStatus.NO_CONTENT);
+			return ResponseEntity.noContent().build();
 			
 		} catch (CityNameNotFoundException e) {
-			return new ResponseEntity<City>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 	}
 }
